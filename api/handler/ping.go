@@ -1,8 +1,6 @@
 package handler
 
 import (
-	"fmt"
-
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gsxhnd/tenhou/api/service"
@@ -13,7 +11,6 @@ type PingHandler interface {
 }
 
 type pingHandle struct {
-	// logger    utils.Logger
 	validator *validator.Validate
 	svc       service.PingService
 }
@@ -25,7 +22,14 @@ func NewPingHandler(svc service.PingService) PingHandler {
 	}
 }
 
+// @Description  ping
+// @Accept       json
+// @Produce      json
+// @Router       /ping [get]
 func (h *pingHandle) Ping(ctx *fiber.Ctx) error {
-	fmt.Println("ping")
+	err := h.svc.Ping()
+	if err != nil {
+		return ctx.Status(400).SendString(err.Error())
+	}
 	return ctx.Status(200).SendString("pong")
 }

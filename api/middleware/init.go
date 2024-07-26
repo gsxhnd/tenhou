@@ -1,17 +1,19 @@
 package middleware
 
+import (
+	"github.com/gofiber/fiber/v2"
+	"github.com/gsxhnd/tenhou/utils"
+)
+
 type Middlewarer interface {
-	// RequestLog(ctx *fiber.Ctx) error
-	// Websocket(ctxc *fiber.Ctx) error
+	RequestLog(ctx *fiber.Ctx) error
 }
 type middleware struct {
-	// logger utils.Logger
-	// tracer utils.Tracer
+	logger utils.Logger
 }
 
-func NewMiddleware() Middlewarer {
+func NewMiddleware(l utils.Logger) Middlewarer {
 	return &middleware{
-		// logger: l,
-		// tracer: t,
+		logger: l,
 	}
 }

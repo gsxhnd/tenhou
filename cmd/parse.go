@@ -12,13 +12,6 @@ import (
 	"github.com/antchfx/htmlquery"
 )
 
-// type paifuList struct {
-// 	south3 []paifu
-// 	south4 []paifu
-// 	east3  []paifu
-// 	east4  []paifu
-// }
-
 type Paifu struct {
 	Date     string `json:"date"`
 	GameType string `json:"game_type"`

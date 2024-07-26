@@ -12,6 +12,8 @@ import (
 
 	"github.com/gocolly/colly/v2"
 	"github.com/gocolly/colly/v2/queue"
+	"github.com/gsxhnd/tenhou/db"
+	"github.com/gsxhnd/tenhou/utils"
 	"github.com/urfave/cli/v2"
 )
 
@@ -61,15 +63,16 @@ var filterLogDBCmd = &cli.Command{
 		var htmlList = make([]string, 0)
 
 		filepath.WalkDir(inputPath, func(path string, d fs.DirEntry, err error) error {
-			// fmt.Println(path)
 			htmlList = append(htmlList, path)
 			return nil
 		})
 
-		db := Init()
+		config, _ := utils.NewConfig()
+		db, _ := db.NewDatabase(config, nil)
+
 		for _, v := range htmlList {
 			data, _ := ReadSingleFile(v)
-			tx, _ := db.Begin()
+			tx, _ := db.TenhouDB.Begin()
 			stmt, _ := tx.Prepare("insert into tenhou(log_id, game_type, game_date) values(?, ?,?)")
 			defer stmt.Close()
 			for _, d := range data {
@@ -78,7 +81,7 @@ var filterLogDBCmd = &cli.Command{
 			tx.Commit()
 		}
 
-		conn, _ := db.Conn(context.Background())
+		conn, _ := db.TenhouDB.Conn(context.Background())
 		conn.PingContext(context.Background())
 
 		return nil

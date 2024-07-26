@@ -10,17 +10,19 @@ import (
 	"github.com/gsxhnd/tenhou/api/middleware"
 	"github.com/gsxhnd/tenhou/api/router"
 	"github.com/gsxhnd/tenhou/api/service"
+	"github.com/gsxhnd/tenhou/db"
+	"github.com/gsxhnd/tenhou/utils"
 )
 
 func InitApp() (*Application, error) {
 	wire.Build(
-		// utils.UtilsSet,
+		utils.UtilsSet,
 		NewApplication,
 		router.NewRouter,
 		middleware.NewMiddleware,
 		handler.HandlerSet,
 		service.ServiceSet,
-		// db.DBSet,
+		db.DBSet,
 	)
 	return &Application{}, nil
 }

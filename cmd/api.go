@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/gsxhnd/tenhou/api/di"
+	"github.com/gsxhnd/tenhou/di"
 	"github.com/urfave/cli/v2"
 )
 
