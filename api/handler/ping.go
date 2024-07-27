@@ -17,14 +17,13 @@ type pingHandle struct {
 
 func NewPingHandler(svc service.PingService) PingHandler {
 	return &pingHandle{
-		// logger: l,
 		svc: svc,
 	}
 }
 
-// @Description  ping
-// @Accept       json
+// @Description  ping serivce working, db connect
 // @Produce      json
+// @Success      200
 // @Router       /ping [get]
 func (h *pingHandle) Ping(ctx *fiber.Ctx) error {
 	err := h.svc.Ping()

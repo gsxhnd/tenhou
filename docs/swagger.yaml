@@ -1,26 +1,24 @@
 basePath: /api/v1
+externalDocs:
+  description: OpenAPI
 host: localhost:8080
 info:
-  contact:
-    email: support@swagger.io
-    name: API Support
-    url: http://www.swagger.io/support
+  contact: {}
   description: This is a sample server celler server.
   license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
-  termsOfService: http://swagger.io/terms/
-  title: Swagger Example API
-  version: "2"
+    name: MIT
+    url: https://opensource.org/license/mit
+  title: Tenhou API
+  version: "1"
 paths:
   /ping:
     get:
-      consumes:
-      - application/json
-      description: ping
+      description: ping serivce working, db connect
       produces:
       - application/json
-      responses: {}
+      responses:
+        "200":
+          description: OK
 securityDefinitions:
   BasicAuth:
     type: basic
