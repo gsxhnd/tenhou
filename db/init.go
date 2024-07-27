@@ -25,7 +25,7 @@ func NewDatabase(cfg *utils.Config, l utils.Logger) (*Database, error) {
 	CREATE TABLE IF NOT EXISTS "tenhou"
 	(
 		"id"        INTEGER NOT NULL UNIQUE,
-		"log_id"    VARCHAR,
+		"log_id"    VARCHAR NOT NULL UNIQUE,
 		"game_type" VARCHAR,
 		"game_date" DATETIME,
 		PRIMARY KEY ("id")

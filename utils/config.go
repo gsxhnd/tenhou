@@ -18,7 +18,7 @@ func NewConfig() (*Config, error) {
 	var c = Config{
 		Mode:             "dev",
 		LogFileName:      "./log/tenhou.log",
-		TenhouDBPath:     "./data/tenhou.db",
+		TenhouDBPath:     "./data/tenhou_data.db",
 		TenhouJsonDBPath: "./data/tenhou_json.db",
 		Listen:           ":8080",
 	}
