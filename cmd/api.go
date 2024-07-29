@@ -10,7 +10,7 @@ var apiCmd = &cli.Command{
 	Action: func(ctx *cli.Context) error {
 		app, err := di.InitApp()
 		if err != nil {
-			return err
+			panic(err)
 		}
 		return app.Run()
 	},

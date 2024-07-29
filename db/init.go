@@ -12,6 +12,7 @@ import (
 type Database struct {
 	TenhouDB     *sql.DB
 	TenhouJsonDB *bbolt.DB
+	logger       utils.Logger
 }
 
 func NewDatabase(cfg *utils.Config, l utils.Logger) (*Database, error) {
@@ -47,6 +48,7 @@ func NewDatabase(cfg *utils.Config, l utils.Logger) (*Database, error) {
 	return &Database{
 		TenhouDB:     db,
 		TenhouJsonDB: jsonDB,
+		logger:       l,
 	}, nil
 }
 

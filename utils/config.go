@@ -1,8 +1,6 @@
 package utils
 
 import (
-	"fmt"
-
 	"github.com/caarlos0/env/v11"
 )
 
@@ -30,8 +28,6 @@ func NewConfig() (*Config, error) {
 	if err := env.ParseWithOptions(&c, opts); err != nil {
 		return nil, err
 	}
-
-	fmt.Println("config:", c)
 
 	return &c, nil
 }

@@ -1,8 +1,6 @@
 package router
 
 import (
-	"fmt"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/gsxhnd/tenhou/api/handler"
 	"github.com/gsxhnd/tenhou/api/middleware"
@@ -49,11 +47,12 @@ func (r *router) Run() error {
 
 	api := r.app.Group("/api/v1")
 	api.Get("/ping", r.h.PingHandler.Ping)
+	api.Get("/log", r.h.LogHandler.GetLogInfoList)
+	api.Get("/log/:log_id", r.h.LogHandler.GetLogInfoByLogId)
 	// api.Get("/paifu")
 	// api.Get("/paifu/:log_id")
 
 	r.app.Use(func(c *fiber.Ctx) error {
-		fmt.Println(c.Request().URI())
 		return c.SendStatus(404)
 	})
 

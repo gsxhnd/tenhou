@@ -1,23 +1,19 @@
 package main
 
 import (
-	"context"
 	"fmt"
-	"io/fs"
 	"os"
 	"path"
-	"path/filepath"
 	"strings"
 	"time"
 
 	"github.com/gocolly/colly/v2"
 	"github.com/gocolly/colly/v2/queue"
-	"github.com/gsxhnd/tenhou/db"
-	"github.com/gsxhnd/tenhou/utils"
 	"github.com/urfave/cli/v2"
 )
 
 var rootCmd = cli.NewApp()
+
 var downloadDayDataCmd = &cli.Command{
 	Name:  "dd",
 	Usage: "download day data from tenhou",
@@ -55,44 +51,12 @@ var downloadDayDataCmd = &cli.Command{
 	},
 }
 
-var filterLogDBCmd = &cli.Command{
-	Name:  "log_db",
-	Usage: "convert tenhou day data to csv",
-	Action: func(ctx *cli.Context) error {
-		var inputPath = "./data/tenhou_zip"
-		var htmlList = make([]string, 0)
-
-		filepath.WalkDir(inputPath, func(path string, d fs.DirEntry, err error) error {
-			htmlList = append(htmlList, path)
-			return nil
-		})
-
-		config, _ := utils.NewConfig()
-		db, _ := db.NewDatabase(config, nil)
-
-		for _, v := range htmlList {
-			data, _ := ReadSingleFile(v)
-			tx, _ := db.TenhouDB.Begin()
-			stmt, _ := tx.Prepare("insert into tenhou(log_id, game_type, game_date) values(?, ?,?)")
-			defer stmt.Close()
-			for _, d := range data {
-				stmt.Exec(d.LogID, d.GameType, d.Date)
-			}
-			tx.Commit()
-		}
-
-		conn, _ := db.TenhouDB.Conn(context.Background())
-		conn.PingContext(context.Background())
-
-		return nil
-	},
-}
-
 func init() {
 	rootCmd.Usage = ""
 	rootCmd.Commands = []*cli.Command{
 		downloadDayDataCmd,
-		filterLogDBCmd,
+		fullHtml2DB,
+		recentHtml2DB,
 		apiCmd,
 	}
 }
