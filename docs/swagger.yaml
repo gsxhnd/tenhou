@@ -1,4 +1,20 @@
-basePath: /api/v1
+definitions:
+  model.Log:
+    description: Log Data info
+    properties:
+      game_date:
+        description: game start date
+        type: string
+      game_type:
+        description: game type
+        type: string
+      id:
+        description: id
+        type: integer
+      log_id:
+        description: log id
+        type: string
+    type: object
 externalDocs:
   description: OpenAPI
 host: localhost:8080
@@ -11,6 +27,49 @@ info:
   title: Tenhou API
   version: "1"
 paths:
+  /api/v1/log:
+    get:
+      description: Get Log Info List from database
+      parameters:
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      - description: Page size
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Log'
+            type: array
+      summary: List Log Data
+      tags:
+      - log
+  /api/v1/log/:log_id:
+    get:
+      description: Use log id get log data info
+      parameters:
+      - description: search by log id
+        in: path
+        name: log_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Log'
+      summary: Log Data Info
+      tags:
+      - log
   /ping:
     get:
       description: ping serivce working, db connect

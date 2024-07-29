@@ -24,7 +24,6 @@ type router struct {
 // @license.name  MIT
 // @license.url   https://opensource.org/license/mit
 // @host      localhost:8080
-// @BasePath  /api/v1
 // @securityDefinitions.basic  BasicAuth
 // @externalDocs.description  OpenAPI
 func NewRouter(cfg *utils.Config, m middleware.Middlewarer, h handler.Handler) (Router, error) {
@@ -44,9 +43,9 @@ func NewRouter(cfg *utils.Config, m middleware.Middlewarer, h handler.Handler) (
 
 func (r *router) Run() error {
 	r.app.Use(r.m.RequestLog)
+	r.app.Get("/ping", r.h.PingHandler.Ping)
 
 	api := r.app.Group("/api/v1")
-	api.Get("/ping", r.h.PingHandler.Ping)
 	api.Get("/log", r.h.LogHandler.GetLogInfoList)
 	api.Get("/log/:log_id", r.h.LogHandler.GetLogInfoByLogId)
 	// api.Get("/paifu")
