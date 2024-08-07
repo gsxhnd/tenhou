@@ -118,9 +118,11 @@ var recentHtml2DB = &cli.Command{
 		}
 
 		if len(notExistData) == 0 {
+			logger.Infof("not exist data in database is zero")
 			return nil
 		}
 
+		logger.Infof("not exist data in database count is: %v", len(notExistData))
 		tx, _ := db.TenhouDB.Begin()
 		stmt, _ := tx.Prepare("insert into tenhou(log_id, game_type, game_date) values(?, ?,?)")
 		defer stmt.Close()
