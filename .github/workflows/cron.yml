@@ -3,6 +3,7 @@ name: Cron Update Data
 on:
   schedule:
     - cron: "0 0 * * 1"
+  push:
 
 jobs:
   Test:
@@ -37,7 +38,13 @@ jobs:
       - name: store to db
         run: go run ./cmd recent_html_to_db
 
+      - name: zip
+        run: zip ./data/tenhou_data.zip ./data/tenhou_data.db
+
       - name: rename db
         run: mv ./data/tenhou_data.db ./data/tenhou_data.$(date +'%Y%m%d').db
+
+      - name: zip
+        run: zip ./data/tenhou_data.$(date +'%Y%m%d').zip ./data/tenhou_data.$(date +'%Y%m%d').db
 
       - run: ls -al ./data
