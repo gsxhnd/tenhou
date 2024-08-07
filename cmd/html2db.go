@@ -80,7 +80,20 @@ var recentHtml2DB = &cli.Command{
 			}
 		}
 
-		fmt.Println(notExistData)
+		fmt.Println(len(notExistData))
+
+		tx, _ := db.TenhouDB.Begin()
+		stmt, _ := tx.Prepare("insert into tenhou(log_id, game_type, game_date) values(?, ?,?)")
+		defer stmt.Close()
+		for _, d := range notExistData {
+			if _, err := stmt.Exec(d.LogID, d.GameType, d.Date); err != nil {
+				logger.Errorw("stmt insert error", "error", err.Error())
+
+			}
+		}
+		if err := tx.Commit(); err != nil {
+			tx.Rollback()
+		}
 
 		return nil
 	},

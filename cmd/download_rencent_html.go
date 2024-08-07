@@ -42,8 +42,7 @@ var downloadRecentCmd = &cli.Command{
 			year := i.Year()
 			date := i.Format("20060102")
 			var url = fmt.Sprintf("https://tenhou.net/sc/raw/dat/%v/scc%v.html.gz", year, date)
-			fmt.Println(url)
-			// queue.AddURL(url)
+			queue.AddURL(url)
 		}
 
 		queue.Run(c)
