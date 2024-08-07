@@ -7,7 +7,7 @@ on:
 
 jobs:
   Test:
-    name: Test
+    name: Cron
     runs-on: ubuntu-latest
     steps:
       - name: Check out code into the Go module directory
@@ -49,3 +49,18 @@ jobs:
         run: zip ./data/tenhou_data.$(date +'%Y%m%d').zip ./data/tenhou_data.$(date +'%Y%m%d').db
 
       - run: ls -al ./data
+
+      - name: Upload
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ./data/tenhou_data.$(date +'%Y%m%d').zip
+          tag: db
+
+      - name: Upload
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ./data/tenhou_data.zip
+          tag: db
+          overwrite: true
