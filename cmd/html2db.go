@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io/fs"
 	"path/filepath"
 
@@ -13,7 +14,7 @@ var fullHtml2DB = &cli.Command{
 	Name:  "full_html_to_db",
 	Usage: "convert tenhou day data to csv",
 	Action: func(ctx *cli.Context) error {
-		var inputPath = "./data/tenhou_zip"
+		var inputPath = "./data/tenhou_html"
 		var htmlList = make([]string, 0)
 		cfg, _ := utils.NewConfig()
 		logger := utils.NewLogger(cfg)
@@ -45,23 +46,41 @@ var recentHtml2DB = &cli.Command{
 	Name:  "recent_html_to_db",
 	Usage: "convert tenhou day data to csv",
 	Action: func(ctx *cli.Context) error {
-		var inputPath = "./data/tencent_html"
+		var inputPath = "./data/tenhou_html"
 		var htmlList = make([]string, 0)
-		// config, _ := utils.NewConfig()
-		// db, _ := db.NewDatabase(config, nil)
+		cfg, _ := utils.NewConfig()
+		logger := utils.NewLogger(cfg)
+		db, _ := db.NewDatabase(cfg, logger)
 
 		filepath.WalkDir(inputPath, func(path string, d fs.DirEntry, err error) error {
-			htmlList = append(htmlList, path)
+			if filepath.Ext(path) == ".html" {
+				htmlList = append(htmlList, path)
+			}
 			return nil
 		})
 
 		var fullData = make([]Paifu, 0)
+		var notExistData = make([]Paifu, 0)
 		for _, v := range htmlList {
 			data, _ := ReadSingleFile(v)
-			for _, d := range data {
-				fullData = append(fullData, d)
+			fullData = append(fullData, data...)
+		}
+
+		for _, p := range fullData {
+			var exist bool
+			rows, err := db.TenhouDB.Query("SELECT EXISTS (SELECT 1 FROM tenhou WHERE log_id = ?) as exist", p.LogID)
+			if err != nil {
+				fmt.Println(err)
+			}
+			if rows.Next() {
+				rows.Scan(&exist)
+			}
+			if !exist {
+				notExistData = append(notExistData, p)
 			}
 		}
+
+		fmt.Println(notExistData)
 
 		return nil
 	},

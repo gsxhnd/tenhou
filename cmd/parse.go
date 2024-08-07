@@ -50,7 +50,7 @@ func ReadSingleFile(filePath string) ([]Paifu, error) {
 		logIdSplit := strings.Split(logId, "-")
 
 		logDate := strings.Replace(logIdSplit[0], "gm", "", -1)
-		fmt.Println(fmt.Sprintf("%v%v", logDate, strings.Split(timeMin, ":")[1]))
+		// fmt.Println(fmt.Sprintf("%v%v", logDate, strings.Split(timeMin, ":")[1]))
 		date, _ := time.Parse("200601021504", fmt.Sprintf("%v%v", logDate, strings.Split(timeMin, ":")[1]))
 
 		datas = append(datas, Paifu{
