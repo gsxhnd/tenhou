@@ -78,7 +78,7 @@ var recentHtml2DB = &cli.Command{
 				rows.Scan(&exist)
 			}
 			if !exist {
-				logger.Infof("log id not exist in db, logid: %v", p.LogID)
+				// logger.Infof("log id not exist in db, logid: %v", p.LogID)
 				notExistData = append(notExistData, p)
 			}
 		}
