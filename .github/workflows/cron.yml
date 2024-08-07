@@ -50,10 +50,10 @@ jobs:
         run: zip ./data/tenhou_data.zip ./data/tenhou_data.db
 
       - name: rename db
-        run: mv ./data/tenhou_data.db ./data/tenhou_data.$(date +'%Y%m%d').db
+        run: mv ./data/tenhou_data.db ./data/tenhou_data.${{ steps.date.outputs.date }}.db
 
       - name: zip
-        run: zip ./data/tenhou_data.$(date +'%Y%m%d').zip ./data/tenhou_data.$(date +'%Y%m%d').db
+        run: zip ./data/tenhou_data.${{ steps.date.outputs.date }}.zip ./data/tenhou_data.${{ steps.date.outputs.date }}.db
 
       - run: ls -al ./data
 
@@ -61,7 +61,7 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ./data/tenhou_data.$(date +'%Y%m%d').zip
+          file: ./data/tenhou_data.${{ steps.date.outputs.date }}.zip
           tag: db
 
       - name: Upload
