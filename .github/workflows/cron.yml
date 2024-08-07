@@ -5,11 +5,15 @@ on:
     - cron: "0 0 * * 1"
   push:
 
+env:
+  FILE_DATE: $(date +'%Y%m%d')
+
 jobs:
   Test:
     name: Cron
     runs-on: ubuntu-latest
     steps:
+      - run: echo "$FILE_DATE"
       - name: Check out code into the Go module directory
         uses: actions/checkout@v4
       - name: Set up Go 1.x
