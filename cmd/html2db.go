@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"io/fs"
 	"path/filepath"
+	"time"
 
 	"github.com/gsxhnd/tenhou/db"
+	"github.com/gsxhnd/tenhou/model"
 	"github.com/gsxhnd/tenhou/utils"
 	"github.com/urfave/cli/v2"
 )
@@ -59,31 +61,65 @@ var recentHtml2DB = &cli.Command{
 			return nil
 		})
 
+		var startDate, endDate time.Time
 		var fullData = make([]Paifu, 0)
+		var dbData = make([]model.Log, 0)
 		var notExistData = make([]Paifu, 0)
+
 		for _, v := range htmlList {
 			data, _ := ReadSingleFile(v)
+			for _, d := range data {
+				t, _ := time.Parse(time.RFC3339, d.Date)
+				if startDate.IsZero() {
+					startDate = t
+				}
+				if endDate.IsZero() {
+					endDate = t
+				}
+
+				if startDate.After(t) {
+					startDate = t
+				}
+				if endDate.Before(t) {
+					endDate = t
+				}
+			}
 			fullData = append(fullData, data...)
 		}
 
-		fmt.Println(len(fullData))
+		rows, err := db.TenhouDB.Query(
+			"select id, log_id,game_type,game_date from tenhou where game_date >= ? and game_date <= ?",
+			startDate.Format(time.RFC3339), endDate.Format(time.RFC3339),
+		)
+		if err != nil {
+			fmt.Println(err)
+		}
 
-		for _, p := range fullData {
-			var exist bool
-			rows, err := db.TenhouDB.Query("SELECT EXISTS (SELECT 1 FROM tenhou WHERE log_id = ?) as exist", p.LogID)
-			if err != nil {
-				fmt.Println(err)
+		for rows.Next() {
+			var data = model.Log{}
+			if err := rows.Scan(&data.Id, &data.LogId, &data.GameType, &data.GameDate); err != nil {
+				logger.Errorw("GetLogInfo scan row error", "error", err)
+				return err
 			}
-			if rows.Next() {
-				rows.Scan(&exist)
+			dbData = append(dbData, data)
+		}
+
+		for _, v := range fullData {
+			var exist bool = false
+			for _, e := range dbData {
+				if v.LogID == e.LogId {
+					exist = true
+				}
 			}
+
 			if !exist {
-				// logger.Infof("log id not exist in db, logid: %v", p.LogID)
-				notExistData = append(notExistData, p)
+				notExistData = append(notExistData, v)
 			}
 		}
 
-		fmt.Println(len(notExistData))
+		if len(notExistData) == 0 {
+			return nil
+		}
 
 		tx, _ := db.TenhouDB.Begin()
 		stmt, _ := tx.Prepare("insert into tenhou(log_id, game_type, game_date) values(?, ?,?)")

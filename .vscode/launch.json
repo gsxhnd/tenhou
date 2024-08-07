@@ -15,6 +15,18 @@
       "output": "${workspaceRoot}/build/main",
       "trace": "verbose",
       "cwd": "${workspaceRoot}"
+    },
+    {
+      "name": "Run recent_html_to_db",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "showLog": true,
+      "program": "${workspaceRoot}/cmd",
+      "args": ["recent_html_to_db"],
+      "output": "${workspaceRoot}/build/main",
+      "trace": "verbose",
+      "cwd": "${workspaceRoot}"
     }
   ]
 }
