@@ -66,6 +66,8 @@ var recentHtml2DB = &cli.Command{
 			fullData = append(fullData, data...)
 		}
 
+		fmt.Println(len(fullData))
+
 		for _, p := range fullData {
 			var exist bool
 			rows, err := db.TenhouDB.Query("SELECT EXISTS (SELECT 1 FROM tenhou WHERE log_id = ?) as exist", p.LogID)
