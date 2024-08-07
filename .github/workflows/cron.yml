@@ -31,7 +31,7 @@ jobs:
 
       - name: unzip data
         run: unzip ./data/tenhou_data.zip
-      - run: ls -al ./data
+      - run: mkdir ./data/tenhou_html && ls -al ./data
 
       - name: download recent data
         run: go run ./cmd download_recent
