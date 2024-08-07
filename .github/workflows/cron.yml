@@ -3,7 +3,6 @@ name: Cron Update Data
 on:
   schedule:
     - cron: "0 0 * * 1"
-  push:
 
 env:
   FILE_DATE: $(date +'%Y%m%d')
