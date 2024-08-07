@@ -28,6 +28,16 @@ jobs:
           out-file-path: "./data"
           extract: true
 
-      - name: test
-        run: ls -al ./
+      - name: unzip data
+        run: unzip ./data/tenhou_data.zip
+      - run: ls -al ./data
+
+      - name: download recent data
+        run: go run ./cmd download_recent
+      - name: store to db
+        run: go run ./cmd recent_html_to_db
+
+      - name: rename db
+        run: mv ./data/tenhou_data.db ./data/tenhou_data.$(date +'%Y%m%d').db
+
       - run: ls -al ./data
