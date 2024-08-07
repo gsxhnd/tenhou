@@ -35,6 +35,7 @@ jobs:
 
       - name: download recent data
         run: go run ./cmd download_recent
+      - run: ls -al ./data/tenhou_html
       - name: store to db
         run: go run ./cmd recent_html_to_db
 
